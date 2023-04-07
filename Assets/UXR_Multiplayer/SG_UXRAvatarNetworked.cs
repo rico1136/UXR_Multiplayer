@@ -29,23 +29,20 @@ public class SG_UXRAvatarNetworked : MonoBehaviourPun,IPunObservable
     private void OnEnable()
     {
         avatar.StateChanged += StateChanged;
-        UxrManager.AvatarsUpdated += UxrManagerOnAvatarsUpdated;
+        // UxrManager.AvatarsUpdated += UxrManagerOnAvatarsUpdated;
     }
     private void OnDisable()
     {
         avatar.StateChanged -= StateChanged;
-        UxrManager.AvatarsUpdated -= UxrManagerOnAvatarsUpdated;
+        // UxrManager.AvatarsUpdated -= UxrManagerOnAvatarsUpdated;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
-        if (avatar.AvatarController is UxrStandardAvatarController controller && photonView.IsMine)
+        if (avatar.AvatarMode == UxrAvatarMode.UpdateExternally &&
+            avatar.AvatarController is UxrStandardAvatarController controller)
         {
-            if (photonView == null)
-            {
-                controller.gameObject.GetPhotonView();
-            }
-            photonView.RPC("UpdateIkRPC",RpcTarget.Others);
+            controller.SolveBodyIK();
         }
     }
 
@@ -76,6 +73,7 @@ public class SG_UXRAvatarNetworked : MonoBehaviourPun,IPunObservable
             }
         }
     }
+    
     private void UxrManagerOnAvatarsUpdated()
     {
         
@@ -93,17 +91,6 @@ public class SG_UXRAvatarNetworked : MonoBehaviourPun,IPunObservable
 
        avatar.SetCurrentHandPose(handSide, (string)vars[1], (float)vars[2], (bool)vars[3]);
     }
-    
-    [PunRPC]
-    public void UpdateIkRPC()
-    {
-        if (avatar.AvatarController is UxrStandardAvatarController controller)
-        {
-            Debug.Log(controller.name + ": Getting IK prompt");
-            controller.SolveBodyIK();
-        }
-    }
-
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
