@@ -29,12 +29,12 @@ public class SG_UXRAvatarNetworked : MonoBehaviourPun,IPunObservable
     private void OnEnable()
     {
         avatar.StateChanged += StateChanged;
-        UxrManager.AvatarsUpdated += UxrManagerOnAvatarsUpdated;
+        // UxrManager.AvatarsUpdated += UxrManagerOnAvatarsUpdated;
     }
     private void OnDisable()
     {
         avatar.StateChanged -= StateChanged;
-        UxrManager.AvatarsUpdated -= UxrManagerOnAvatarsUpdated;
+        // UxrManager.AvatarsUpdated -= UxrManagerOnAvatarsUpdated;
     }
 
     private void Update()
@@ -73,6 +73,7 @@ public class SG_UXRAvatarNetworked : MonoBehaviourPun,IPunObservable
             }
         }
     }
+    
     private void UxrManagerOnAvatarsUpdated()
     {
         
